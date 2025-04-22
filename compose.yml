@@ -1,0 +1,128 @@
+version: "3.9"
+
+services:
+  redis-init:
+    image: ghcr.io/lukastrkan/redis-server-oss:latest
+    depends_on:
+      - redis-1-master
+      - redis-1-slave
+      - redis-2-master
+      - redis-2-slave
+      - redis-3-master
+      - redis-3-slave
+    volumes:
+      - ./init-cluster.sh:/init-cluster.sh      
+      - ./data/cluster:/cluster
+    entrypoint: ["/bin/bash", "/init-cluster.sh"]
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.10
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - "5540:5540"
+    depends_on:
+      redis-init:
+        condition: service_completed_successfully      
+    restart: unless-stopped
+    volumes:
+      - ./data/redis-insight:/data
+    environment:
+      - RI_REDIS_HOST=172.28.0.11
+      - RI_REDIS_PORT=6379
+      - RI_REDIS_NAME=Redis Cluster Master 1
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.100
+
+  redis-1-master:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-1-master/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6371:6379
+      - 16371:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.11
+
+  redis-1-slave:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-1-slave/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6372:6379
+      - 16372:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.12
+
+  redis-2-master:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-2-master/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6373:6379
+      - 16373:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.13
+
+  redis-2-slave:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-2-slave/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6374:6379
+      - 16374:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.14
+
+  redis-3-master:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-3-master/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6375:6379
+      - 16375:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.15
+
+  redis-3-slave:
+    extends:
+      file: common-services.yml
+      service: redis-base
+    volumes:
+      - ./data/redis-3-slave/data:/data
+      - ./redis.conf:/redis-stack.conf:r
+    ports:
+      - 6376:6379
+      - 16376:16379
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.16
+
+networks:
+  redis-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

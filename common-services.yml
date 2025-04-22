@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  redis-base:
+    image: ghcr.io/lukastrkan/redis-server-oss:latest
+    volumes:
+      - ./data/redis-template/data:/data
+      - ./data/redis-template/conf/redis.conf:/redis-stack.conf:r
+    networks:
+      redis-net:
+        ipv4_address: 0.0.0.0 # bude přepsáno
