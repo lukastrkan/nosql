@@ -1,4 +1,4 @@
-FROM ubuntu 24.04 AS base
+FROM ubuntu:24.04 AS base
 ENV TZ=Europe/Prague
 ENV DEBIAN_FRONTEND=noninteractive
 
