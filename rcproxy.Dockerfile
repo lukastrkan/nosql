@@ -13,4 +13,4 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 COPY --from=base /tmp/rcproxy/target/release /app
 
-ENTRYPOINT [ "./app/rcproxy" "/app/default.toml"]
+ENTRYPOINT [ "./app/rcproxy", "/app/default.toml" ]
