@@ -10,3 +10,7 @@ RUN make build COORD=oss
 
 FROM redis/redis-stack-server
 COPY --from=base /tmp/RediSearch/bin/linux-x64-release/search-community/redisearch.so /opt/redis-stack/lib/redisearch.so
+
+LABEL org.opencontainers.image.source=https://github.com/lukastrkan/nosql
+LABEL org.opencontainers.image.description="Redis stack server with OSS search coordinator"
+LABEL org.opencontainers.image.licenses=MIT
