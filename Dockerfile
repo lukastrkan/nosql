@@ -1,4 +1,3 @@
-
 FROM ubuntu:22.04 AS base
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y git build-essential python3 python3-pip cmake libssl-dev cargo wget

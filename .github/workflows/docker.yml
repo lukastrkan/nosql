@@ -7,27 +7,44 @@ on:
   workflow_dispatch:
 
 jobs:
-      push-redis-image:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read
-          packages: write
-        steps:
-          - name: 'Checkout GitHub Action'
-            uses: actions/checkout@main
+  push-redis-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v3
 
-          - name: 'Login to GitHub Container Registry'
-            uses: docker/login-action@v1
-            with:
-              registry: ghcr.io
-              username: ${{github.actor}}
-              password: ${{secrets.GITHUB_TOKEN}}
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-          - name: 'Build redis'
-            run: |
-              docker build . -f Dockerfile --tag ghcr.io/lukastrkan/redis-server-oss:latest
-              docker push ghcr.io/lukastrkan/redis-server-oss:latest
-          - name: 'Build rcproxy' 
-            run: |
-              docker build . -f rcproxy.Dockerfile --tag ghcr.io/lukastrkan/rcproxy:latest
-              docker push ghcr.io/lukastrkan/rcproxy:latest
+      - name: 'Build and push redis'
+        run: |
+          docker build . -f Dockerfile -t ghcr.io/lukastrkan/redis-server-oss:latest
+          docker push ghcr.io/lukastrkan/redis-server-oss:latest
+
+  push-rcproxy-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v3
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Build and push rcproxy'
+        run: |
+          docker build . -f rcproxy.Dockerfile -t ghcr.io/lukastrkan/rcproxy:latest
+          docker push ghcr.io/lukastrkan/rcproxy:latest
