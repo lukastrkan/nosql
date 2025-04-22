@@ -12,6 +12,6 @@ FROM ubuntu:24.04
 ENV TZ=Europe/Prague
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
-COPY --from=base /tmp/rcproxy/target/release /app
+COPY --from=base /tmp/rcproxy/target/release/rcproxy  /app/rcproxy
 
-ENTRYPOINT [ "./app/rcproxy", "/app/default.toml" ]
+ENTRYPOINT [ "/app/rcproxy", "/app/default.toml" ]

@@ -14,7 +14,7 @@ listen_addr = "0.0.0.0:6379"
 hash_tag = "{}"
 thread = 1
 cache_type = "redis_cluster"
-servers = ["127.0.0.1:6371","127.0.0.1:6373","127.0.0.1:6375"]
+servers = ["redis-1-master:6379","redis-2-master:6379","redis-3-master:6379"]
 
 fetch_interval = 1800000 # 1800s , 30 minutes
 fetch_since_latest_cmd = 1000 # 3600s , 1 hour
