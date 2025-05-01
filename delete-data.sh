@@ -11,6 +11,7 @@ if [ "$potvrzeni" != "y" ]; then
 fi
 
 rm -r ./data/redis-*/data/*
+rm -r ./data/redis-insight/*
 
 rm ./data/cluster/cluster-initialized
 

@@ -8,4 +8,6 @@ services:
       - ./data/redis-template/conf/redis.conf:/redis-stack.conf:r
     networks:
       redis-net:
-        ipv4_address: 0.0.0.0 # bude přepsáno
+        ipv4_address: 0.0.0.0
+    environment:
+      REDISEARCH_ARGS: "OSS_GLOBAL_PASSWORD strongpassword"

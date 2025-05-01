@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rcli() {
-  redis-cli -h redis-1-master -p 6379 "$@"
+  redis-cli -h redis-1-master -p 6379 -a strongpassword "$@"
 }
 
 INIT_MARKER=/cluster/cluster-initialized

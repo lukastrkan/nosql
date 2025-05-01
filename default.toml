@@ -29,4 +29,4 @@ dial_timeout = 500
 listen_proto = "tcp"
 node_connections = 1
 
-auth = "" # mypassw
+auth = "strongpassword" # mypassw
