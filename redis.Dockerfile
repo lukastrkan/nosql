@@ -1,4 +1,4 @@
-from ubuntu:24.04
+from ubuntu:24.04 as builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y sudo && sudo apt-get install -y --no-install-recommends ca-certificates wget dpkg-dev gcc g++ libc6-dev libssl-dev make git cmake python3 python3-pip python3-venv python3-dev unzip rsync clang automake autoconf libtool
@@ -14,4 +14,9 @@ RUN export BUILD_TLS=yes BUILD_WITH_MODULES=yes INSTALL_RUST_TOOLCHAIN=yes DISAB
 
 RUN make install
 
-ENTRYPOINT [ "redis-server", "/redis/redis.conf" ]
+FROM ubuntu:24.04
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+#copy modules
+COPY --from=builder /redis/modules/*/*.so /usr/local/lib/
+
+ENTRYPOINT [ "redis-server", "/redis.conf" ]

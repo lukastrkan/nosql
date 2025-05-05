@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   redis-base:
-    image: redis8
+    image: ghcr.io/lukastrkan/redis8
     volumes:
       - ./data/redis-template/data:/data
-      - ./redis.conf:/redis/redis.conf:ro
+      - ./redis.conf:/redis.conf:ro
