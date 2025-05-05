@@ -8,64 +8,58 @@ on:
 
 jobs:
   push-redis-stack-image:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'Dockerfile')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+      - uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Build and push redis'
-        run: |
+      - run: |
           docker build . -f Dockerfile -t ghcr.io/lukastrkan/redis-server-oss:latest
           docker push ghcr.io/lukastrkan/redis-server-oss:latest
 
   push-redis-image:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'redis.Dockerfile')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+      - uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Build and push rcproxy'
-        run: |
+      - run: |
           docker build . -f redis.Dockerfile -t ghcr.io/lukastrkan/redis8:latest
           docker push ghcr.io/lukastrkan/redis8:latest
 
   push-rcproxy-image:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'rcproxy.Dockerfile')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+      - uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Build and push rcproxy'
-        run: |
+      - run: |
           docker build . -f rcproxy.Dockerfile -t ghcr.io/lukastrkan/rcproxy:latest
           docker push ghcr.io/lukastrkan/rcproxy:latest
