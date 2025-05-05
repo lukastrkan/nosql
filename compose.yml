@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   redis-init:
-    image: ghcr.io/lukastrkan/redis-server-oss:latest
+    image: redis
     depends_on:
       - redis-1-master
       - redis-1-slave
@@ -56,7 +56,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-1-master/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+   #   - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6371:6379
       - 16371:16379
@@ -70,7 +70,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-1-slave/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+  #    - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6372:6379
       - 16372:16379
@@ -84,7 +84,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-2-master/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+  #    - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6373:6379
       - 16373:16379
@@ -98,7 +98,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-2-slave/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+#      - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6374:6379
       - 16374:16379
@@ -112,7 +112,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-3-master/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+ #     - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6375:6379
       - 16375:16379
@@ -126,7 +126,7 @@ services:
       service: redis-base
     volumes:
       - ./data/redis-3-slave/data:/data
-      - ./redis.conf:/redis-stack.conf:r
+ #     - ./redis.conf:/redis-stack.conf:r
     ports:
       - 6376:6379
       - 16376:16379
