@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          docker build . -f Dockerfile -t ghcr.io/lukastrkan/redis-server-oss:latest
+          docker build . -f docker/stack.Dockerfile -t ghcr.io/lukastrkan/redis-server-oss:latest
           docker push ghcr.io/lukastrkan/redis-server-oss:latest
 
   push-redis-image:
@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          docker build . -f redis.Dockerfile -t ghcr.io/lukastrkan/redis8:latest
+          docker build . -f docker/redis.Dockerfile -t ghcr.io/lukastrkan/redis8:latest
           docker push ghcr.io/lukastrkan/redis8:latest
 
   push-rcproxy-image:
@@ -58,5 +58,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          docker build . -f rcproxy.Dockerfile -t ghcr.io/lukastrkan/rcproxy:latest
+          docker build . -f docker/rcproxy.Dockerfile -t ghcr.io/lukastrkan/rcproxy:latest
           docker push ghcr.io/lukastrkan/rcproxy:latest
