@@ -11,7 +11,7 @@ services:
       - redis-3-master
       - redis-3-slave
     volumes:
-      - ./init-cluster.sh:/init-cluster.sh      
+      - ./init-cluster.sh:/init-cluster.sh  
       - ./data/cluster:/cluster
       - ./python:/python
     entrypoint: ["/bin/bash", "/init-cluster.sh"]

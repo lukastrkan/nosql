@@ -60,22 +60,8 @@ echo "✅ Redis cluster byl úspěšně vytvořen a repliky přiřazeny ručně.
 
 echo "Importing initial data..."
 
-apt-get update && apt-get install -y python3-pip python3-venv
-
 cd /python
-
-# Vytvoření a aktivace virtuálního prostředí
-python3 -m venv venv
-source venv/bin/activate
-
-# Instalace závislostí do venv
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Spuštění skriptu ve venv
-python load_data.py
-
-deactivate
+chmod +x load_data.py
+./load_data.py
 
 touch "$INIT_MARKER"
-

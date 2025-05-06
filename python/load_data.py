@@ -1,3 +1,5 @@
+#!/python/venv/bin/python
+
 import kagglehub
 from redis_client import get_redis_client
 import os
