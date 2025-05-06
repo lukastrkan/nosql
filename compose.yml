@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   redis-init:
-    image: ghcr.io/lukastrkan/redis8
+    image: ghcr.io/lukastrkan/redis8-init
     depends_on:
       - redis-1-master
       - redis-1-slave
