@@ -1,24 +1,7 @@
-FROM ubuntu:24.04 AS builder
+FROM redis:8
 
-ENV version=8.0.0
-
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y sudo && sudo apt-get install -y --no-install-recommends ca-certificates wget dpkg-dev gcc g++ libc6-dev libssl-dev make git cmake python3 python3-pip python3-venv python3-dev unzip rsync clang automake autoconf libtool
-
-WORKDIR /tmp
-
-RUN wget -O redis-${version}.tar.gz https://github.com/redis/redis/archive/refs/tags/${version}.tar.gz
-RUN tar xvf redis-${version}.tar.gz && rm redis-${version}.tar.gz && mv /tmp/redis-${version} /redis
-WORKDIR /redis
-
-RUN export BUILD_TLS=yes BUILD_WITH_MODULES=yes INSTALL_RUST_TOOLCHAIN=yes DISABLE_WERRORS=yes && \
-    make -j "$(nproc)" all
-
-RUN make install
-
-FROM ubuntu:24.04
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
-#copy modules
-COPY --from=builder /redis/modules/*/*.so /usr/local/lib/
-
+COPY --from=redislabs/redisgears:edge /build/target/release/ /usr/local/lib/redis/modules/rg
+RUN apt-get update && apt-get install curl -y && curl http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1~18.04.23_amd64.deb -o /tmp/libssl1.1_1.1.1-1ubuntu2.1~18.04.23_amd64.deb
+RUN dpkg -i /tmp/libssl1.1_1.1.1-1ubuntu2.1~18.04.23_amd64.deb
+WORKDIR /data
 ENTRYPOINT [ "redis-server", "/redis.conf" ]
