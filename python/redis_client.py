@@ -6,4 +6,5 @@ def get_redis_client():
         ClusterNode(host='172.28.0.13', port=6379),
         ClusterNode(host='172.28.0.15', port=6379),
     ]
-    return RedisCluster(startup_nodes=startup_nodes, decode_responses=True, password='strongpassword')
+    #return RedisCluster(startup_nodes=startup_nodes, decode_responses=True, password='strongpassword')
+    return RedisCluster(startup_nodes=startup_nodes, decode_responses=True)

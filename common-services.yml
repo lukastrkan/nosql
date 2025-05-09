@@ -6,3 +6,4 @@ services:
     volumes:
       - ./data/redis-template/data:/data
       - ./redis.conf:/redis.conf:ro
+      - ./libs:/libs:ro

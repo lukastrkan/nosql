@@ -1,5 +1,3 @@
-#!/python/venv/bin/python
-
 import kagglehub
 from redis_client import get_redis_client
 import os
@@ -23,3 +21,14 @@ for file in os.listdir(path):
                 key = f"{filaname}:{appid}"
                 r.hset(key, mapping=row)  # Redis hash
             print(f"Loaded {file} into Redis as hashes")
+
+r.execute_command(
+    "FT.CREATE", "steam_desc_idx",
+    "ON", "HASH",
+    "PREFIX", "1", "steam_description_data:",
+    "SCHEMA",
+    "short_description", "TEXT",
+    "detailed_description", "TEXT",
+    "about_the_game", "TEXT",
+    "steam_appid", "NUMERIC"
+)
