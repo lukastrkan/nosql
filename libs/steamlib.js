@@ -3,8 +3,7 @@
 // === 1. Univerzální FT.SEARCH bez LIMIT ===
 redis.registerClusterFunction("remoteSearchByText", async (async_client, [indexName, query]) => {
     return await async_client.block(async (client) => {
-        redis.log(`🔍 Searching in index '${indexName}' for query: ${query}`);
-
+        
         const search = await client.callAsync(
             'FT.SEARCH',
             indexName,
@@ -13,8 +12,7 @@ redis.registerClusterFunction("remoteSearchByText", async (async_client, [indexN
         );
 
         const results = search.results || [];
-        if (!Array.isArray(results) || results.length === 0) {
-            redis.log("❌ No FT.SEARCH results");
+        if (!Array.isArray(results) || results.length === 0) {            
             return [];
         }
       
@@ -26,16 +24,13 @@ redis.registerClusterFunction("remoteSearchByText", async (async_client, [indexN
 // === 2. HGETALL + extrakce pole ===
 redis.registerClusterFunction("remoteHGetFieldFromHash", async (async_client, [hashKey, fieldName]) => {
     return await async_client.block(async (client) => {
-        const hash = await client.callAsync('HGETALL', hashKey);
-        redis.log("📦 Hash data for " + hashKey + ": " + JSON.stringify(hash));
+        const hash = await client.callAsync('HGETALL', hashKey);        
 
         const value = hash[fieldName];
-        if (!value) {
-            redis.log(`❌ Field '${fieldName}' not found in ${hashKey}`);
+        if (!value) {            
             return null;
         }
 
-        redis.log(`🧩 Extracted field '${fieldName}': ${value}`);
         return value;
     });
 });
@@ -44,12 +39,10 @@ redis.registerClusterFunction("remoteHGetFieldFromHash", async (async_client, [h
 redis.registerClusterFunction("remoteFetchHash", async (async_client, hashKey) => {
     return await async_client.block(async (client) => {
         const data = await client.callAsync('HGETALL', hashKey);
-        if (!data || Object.keys(data).length === 0) {
-            redis.log("⚠️ Hash is empty: " + hashKey);
+        if (!data || Object.keys(data).length === 0) {            
             return null;
         }
 
-        redis.log("📦 Fetched full hash from " + hashKey);
         return data;
     });
 });
@@ -60,10 +53,8 @@ redis.registerAsyncFunction("searchSteamByText", async (async_client, query) => 
 
     const [rawResults] = await async_client.runOnShards("remoteSearchByText", [indexName, query]);
     const keys = rawResults.flat();  // sjednocení výsledků ze všech shardů
-    redis.log("🔍 Flattened descKeys: " + JSON.stringify(keys));
 
-    if (keys.length === 0) {
-        redis.log("❌ No descKeys found across shards");
+    if (keys.length === 0) {    
         return [];
     }
 
@@ -80,11 +71,9 @@ redis.registerAsyncFunction("searchSteamByText", async (async_client, query) => 
                 results.push(data);
             }
         }
-    } catch (error) {
-        redis.log("❌ Error while fetching data: " + error);
+    } catch (error) {        
         return [];
     }
 
-    redis.log(`✅ Returning ${results.length} matched records`);
     return results;
 });

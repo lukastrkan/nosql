@@ -4,12 +4,18 @@ services:
   redis-init:
     image: ghcr.io/lukastrkan/redis8-init
     depends_on:
-      - redis-1-master
-      - redis-1-slave
-      - redis-2-master
-      - redis-2-slave
-      - redis-3-master
-      - redis-3-slave
+      redis-1-master:
+        condition: service_healthy
+      redis-1-slave:
+        condition: service_healthy
+      redis-2-master:
+        condition: service_healthy
+      redis-2-slave:
+        condition: service_healthy
+      redis-3-master:
+        condition: service_healthy
+      redis-3-slave:
+        condition: service_healthy
     volumes:
       - ./init-cluster.sh:/init-cluster.sh:ro
       - ./data/cluster:/cluster
@@ -19,19 +25,6 @@ services:
     networks:
       redis-net:
         ipv4_address: 172.28.0.10
-
-  rc-proxy:
-    image: ghcr.io/lukastrkan/rcproxy:latest    
-    ports:
-      - 6379:6379
-    volumes:
-      - ./default.toml:/app/default.toml:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    restart: unless-stopped
-    networks:
-      redis-net:
-        ipv4_address: 172.28.0.101
   redis-insight:
     image: redis/redisinsight:latest
     container_name: redis-insight

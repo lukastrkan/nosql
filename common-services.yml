@@ -7,3 +7,9 @@ services:
       - ./data/redis-template/data:/data
       - ./redis.conf:/redis.conf:ro
       - ./libs:/libs:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s

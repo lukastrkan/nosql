@@ -5,7 +5,41 @@ rcli() {
 }
 
 echo "⏳ Čekám na Redis instance..."
-sleep 10
+
+# Funkce pro kontrolu dostupnosti Redis instance
+check_redis_available() {
+  local host=$1
+  local port=6379
+  redis-cli -h "$host" -p "$port" PING &>/dev/null
+  return $?
+}
+
+# Všechny Redis instance, na které potřebujeme čekat
+MASTER_NODES=(
+  redis-1-master
+  redis-2-master
+  redis-3-master
+)
+
+SLAVE_NODES=(
+  redis-1-slave
+  redis-2-slave
+  redis-3-slave
+)
+
+NODES=("${MASTER_NODES[@]}" "${SLAVE_NODES[@]}")
+
+# Aktivní čekání na dostupnost všech Redis instancí
+for instance in "${NODES[@]}"; do
+  echo "⏳ Čekám na dostupnost $instance..."
+  while ! check_redis_available "$instance"; do
+    echo "⌛ $instance stále není dostupný, čekám 1 sekundu..."
+    sleep 1
+  done
+  echo "✅ $instance je dostupný"
+done
+
+echo "✅ Všechny Redis instance jsou dostupné"
 
 INIT_MARKER=/cluster/cluster-initialized
 
@@ -19,8 +53,27 @@ else
     redis-3-master:6379 \
     --cluster-replicas 0
 
-  echo "⏳ Čekám na šíření konfigurace..."
-  sleep 5
+  echo "⏳ Čekám na aplikaci změn konfigurace..."
+  
+  # Funkce pro kontrolu stavu clusteru
+  check_cluster_state() {
+    local host=$1
+    local state=$(redis-cli -h "$host" -p 6379 cluster info 2>/dev/null | grep cluster_state | awk -F: '{print $2}' | tr -d '\r')
+    if [ "$state" = "ok" ]; then
+      return 0
+    else
+      return 1
+    fi
+  }
+  
+  # Čekáme na stabilizaci masterů po vytvoření clusteru
+  for master in "redis-1-master" "redis-2-master" "redis-3-master"; do
+    while ! check_cluster_state "$master"; do
+      echo "⌛ Čekám na stabilizaci $master..."
+      sleep 1
+    done
+    echo "✅ $master je stabilní"
+  done
 
   echo "🔍 Získávám Node ID masterů..."
   ALL_NODES=$(rcli cluster nodes)
@@ -48,21 +101,6 @@ else
 fi
 
 echo "⏳ Čekám na cluster_state=ok na všech nodech..."
-
-MASTER_NODES=(
-  redis-1-master
-  redis-2-master
-  redis-3-master
-)
-
-SLAVE_NODES=(
-  redis-1-slave
-  redis-2-slave
-  redis-3-slave
-)
-
-NODES=("${MASTER_NODES[@]}" "${SLAVE_NODES[@]}")
-
 
 for NODE in "${NODES[@]}"; do
   while true; do
