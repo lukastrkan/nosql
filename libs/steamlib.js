@@ -13,6 +13,7 @@ redis.registerClusterFunction("remoteSearchByText", async (async_client, [indexN
 
         const results = search.results || [];
         if (!Array.isArray(results) || results.length === 0) {            
+            redis.log("No results found for query: " + query);
             return [];
         }
       
@@ -27,7 +28,8 @@ redis.registerClusterFunction("remoteHGetFieldFromHash", async (async_client, [h
         const hash = await client.callAsync('HGETALL', hashKey);        
 
         const value = hash[fieldName];
-        if (!value) {            
+        if (!value) {          
+            redis.log("No value found for field: " + fieldName);  
             return null;
         }
 
@@ -39,7 +41,8 @@ redis.registerClusterFunction("remoteHGetFieldFromHash", async (async_client, [h
 redis.registerClusterFunction("remoteFetchHash", async (async_client, hashKey) => {
     return await async_client.block(async (client) => {
         const data = await client.callAsync('HGETALL', hashKey);
-        if (!data || Object.keys(data).length === 0) {            
+        if (!data || Object.keys(data).length === 0) {     
+            redis.log("No data found for hash key: " + hashKey);       
             return null;
         }
 
@@ -55,25 +58,27 @@ redis.registerAsyncFunction("searchSteamByText", async (async_client, query) => 
     const keys = rawResults.flat();  // sjednocení výsledků ze všech shardů
 
     if (keys.length === 0) {    
+        redis.log("No keys found for query: " + query);
         return [];
     }
 
     const results = [];
 
-    try {
         for (const descKey of keys) {
-            const appid = await async_client.runOnKey(descKey, "remoteHGetFieldFromHash", [descKey, "steam_appid"]);
-            if (!appid) continue;
-
-            const steamKey = `steam:{${appid}}`;
-            const data = await async_client.runOnKey(steamKey, "remoteFetchHash", steamKey);
-            if (data) {                
-                results.push(data);
+            try {
+                const appid = await async_client.runOnKey(descKey, "remoteHGetFieldFromHash", [descKey, "steam_appid"]);
+                if (!appid) continue;
+    
+                const steamKey = `steam:{${appid}}`;
+                const data = await async_client.runOnKey(steamKey, "remoteFetchHash", steamKey);
+                if (data) {                
+                    results.push(data);
+                }
+            } catch (error) {
+                redis.log(`Error processing key ${descKey}: ${error}`);
             }
+            
         }
-    } catch (error) {        
-        return [];
-    }
 
     return results;
 });
