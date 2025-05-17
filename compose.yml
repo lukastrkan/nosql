@@ -17,10 +17,10 @@ services:
       redis-6:
         condition: service_healthy
     volumes:
-      - ./init-cluster.sh:/init-cluster.sh:ro
+      - ./init/init-cluster.sh:/init-cluster.sh:ro
       - ./data/cluster:/cluster
       - ./python:/python/scripts:ro
-      - ./libs:/libs:ro
+      - ./certs:/certs:ro
     entrypoint: ["/bin/bash", "/init-cluster.sh"]
     networks:
       redis-net:
@@ -31,16 +31,25 @@ services:
     ports:
       - "5540:5540"      
     restart: unless-stopped
+    user: root
     volumes:
       - redis-insight:/data
+      - ./certs:/certs:ro
     environment:
       - RI_REDIS_HOST=172.28.0.11
       - RI_REDIS_PORT=6379
-      - RI_REDIS_NAME=Redis Cluster Master 1
-      #- RI_REDIS_PASSWORD=strongpassword
+      - RI_REDIS_ALIAS=Redis Cluster Master
+      - RI_REDIS_PASSWORD=strongpassword
+      - RI_REDIS_TLS=true
+      - RI_REDIS_TLS_CA_PATH=/certs/ca.crt
+      - RI_REDIS_TLS_CERT_PATH=/certs/redis.crt
+      - RI_REDIS_TLS_KEY_PATH=/certs/redis.key
     networks:
       redis-net:
         ipv4_address: 172.28.0.100
+    depends_on:
+      redis-init:
+        condition: service_completed_successfully
 
   redis-1:
     extends:

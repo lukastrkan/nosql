@@ -6,9 +6,9 @@ services:
     volumes:
       - ./data/redis-template/data:/data
       - ./redis.conf:/redis.conf:ro
-      - ./libs:/libs:ro
+      - ./certs:/certs:ro
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "--tls", "--cert", "/certs/redis.crt", "--key", "/certs/redis.key","--cacert", "/certs/ca.crt", "-a", "$REDIS_PASSWORD", "ping" ]
       interval: 5s
       timeout: 3s
       retries: 5
