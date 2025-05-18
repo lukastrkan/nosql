@@ -1,14 +1,12 @@
-version: "3.9"
-
 services:
   redis-base:
     image: ghcr.io/lukastrkan/redis8
-    volumes:
-      - ./data/redis-template/data:/data
-      - ./redis.conf:/redis.conf:ro
+    volumes:      
+      - ./config/redis.conf:/redis.conf:ro
       - ./certs:/certs:ro
+      - ./config/access-rights.acl:/access-rights.acl:ro
     healthcheck:
-      test: [ "CMD", "redis-cli", "--tls", "--cert", "/certs/redis.crt", "--key", "/certs/redis.key","--cacert", "/certs/ca.crt", "-a", "$REDIS_PASSWORD", "ping" ]
+      test: [ "CMD", "redis-cli", "--tls", "--cert", "/certs/redis.crt", "--key", "/certs/redis.key","--cacert", "/certs/ca.crt", "-a", "strongpassword", "ping" ]
       interval: 5s
       timeout: 3s
       retries: 5

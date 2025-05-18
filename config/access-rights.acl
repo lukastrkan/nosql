@@ -1,0 +1,4 @@
+user default on +@all ~* >strongpassword
+user cluster-sync on +psync +replconf +ping >syncpassword
+user cache-client on +@read -@write ~* >password
+user cache-service on +@read +@write ~* >password
