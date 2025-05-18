@@ -27,8 +27,9 @@ r.execute_command(
     "ON", "HASH",
     "PREFIX", "1", "steam:{",
     "SCHEMA",
-    "short_description", "TEXT",
-    "detailed_description", "TEXT",
-    "about_the_game", "TEXT",
-    "steam_appid", "NUMERIC", "SORTABLE"
+    "name", "TEXT",
+    "price", "NUMERIC", "SORTABLE",
+    "genres", "TEXT",
+    "platforms", "TEXT",
+    "steamcpy_tags", "TEXT",
 )
