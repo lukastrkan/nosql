@@ -31,5 +31,11 @@ r.execute_command(
     "price", "NUMERIC", "SORTABLE",
     "genres", "TEXT",
     "platforms", "TEXT",
-    "steamcpy_tags", "TEXT",
+    "steamspy_tags", "TEXT",
+    "release_date", "TEXT", "SORTABLE",
+    "developer", "TEXT", "SORTABLE",
+    "positive_ratings", "NUMERIC", "SORTABLE",
+    "negative_ratings", "NUMERIC", "SORTABLE",
+    "average_playtime", "NUMERIC", "SORTABLE",
+    "owners", "TEXT", "SORTABLE",
 )
