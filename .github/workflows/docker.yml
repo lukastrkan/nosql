@@ -22,6 +22,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
+          cd Funkcni_reseni
           docker build . -f docker/stack.Dockerfile -t ghcr.io/lukastrkan/redis-server-oss:latest
           docker push ghcr.io/lukastrkan/redis-server-oss:latest
 
@@ -40,6 +41,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
+          cd Funkcni_reseni
           docker build . -f docker/redis.Dockerfile -t ghcr.io/lukastrkan/redis8:latest
           docker push ghcr.io/lukastrkan/redis8:latest
 
@@ -59,6 +61,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
+          cd Funkcni_reseni
           docker build . -f docker/init.Dockerfile -t ghcr.io/lukastrkan/redis8-init:latest
           docker push ghcr.io/lukastrkan/redis8-init:latest
 
@@ -77,5 +80,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
+          cd Funkcni_reseni
           docker build . -f docker/rcproxy.Dockerfile -t ghcr.io/lukastrkan/rcproxy:latest
           docker push ghcr.io/lukastrkan/rcproxy:latest

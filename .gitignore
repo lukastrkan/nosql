@@ -1,5 +1,5 @@
-data/
-python/__pycache__/
-python/venv
-.venv
-certs/*
+Funkcni_reseni/data/
+Funkcni_reseni/python/__pycache__/
+Funkcni_reseni/python/venv
+Funkcni_reseni/.venv
+Funkcni_reseni/certs/*
