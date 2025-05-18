@@ -63,7 +63,7 @@ else
 
     echo "Import dat do clusteru"
     cd /init
-    /init/venv/bin/python scripts/load_data.py
+    /init/venv/bin/python load_data.py
     echo "Data importovana"
 
     touch $INIT_MARKER

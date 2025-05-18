@@ -14,10 +14,8 @@ services:
         condition: service_healthy
       redis-6:
         condition: service_healthy
-    volumes:
-      - ./init/init-cluster.sh:/init-cluster.sh:ro
-      - ./data/cluster:/cluster
-      - ./python:/python/scripts:ro
+    volumes:      
+      - ./data/cluster:/cluster      
       - ./certs:/certs:ro
     networks:
       redis-net:
