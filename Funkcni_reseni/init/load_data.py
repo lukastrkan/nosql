@@ -25,10 +25,10 @@ for file in os.listdir(path):
 r.execute_command(
     "FT.CREATE", "steam_desc_idx",
     "ON", "HASH",
-    "PREFIX", "1", "steam_description_data:",
+    "PREFIX", "1", "steam:{",
     "SCHEMA",
     "short_description", "TEXT",
     "detailed_description", "TEXT",
     "about_the_game", "TEXT",
-    "steam_appid", "NUMERIC"
+    "steam_appid", "NUMERIC", "SORTABLE"
 )
