@@ -23,7 +23,7 @@ for file in os.listdir(path):
             print(f"Loaded {file} into Redis as hashes")
 
 r.execute_command(
-    "FT.CREATE", "steam_desc_idx",
+    "FT.CREATE", "idx_games",
     "ON", "HASH",
     "PREFIX", "1", "steam:{",
     "SCHEMA",
