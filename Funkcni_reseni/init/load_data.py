@@ -39,3 +39,54 @@ r.execute_command(
     "average_playtime", "NUMERIC", "SORTABLE",
     "owners", "TEXT", "SORTABLE",
 )
+
+r.execute_command(
+    "FT.CREATE", "idx_steam_description",
+    "ON", "HASH",
+    "PREFIX", "1", "desc:{",
+    "SCHEMA",
+    "detailed_description", "TEXT",
+    "about_the_game", "TEXT",
+    "short_description", "TEXT"
+)
+
+r.execute_command(
+    "FT.CREATE", "idx_steam_media",
+    "ON", "HASH",
+    "PREFIX", "1", "media:{",
+    "SCHEMA",
+    "header_image", "TEXT",
+    "screenshots", "TEXT",
+    "background", "TEXT",
+    "movies", "TEXT"
+)
+
+r.execute_command(
+    "FT.CREATE", "idx_steam_requirements",
+    "ON", "HASH",
+    "PREFIX", "1", "req:{",
+    "SCHEMA",
+    "pc_requirements", "TEXT",
+    "mac_requirements", "TEXT",
+    "linux_requirements", "TEXT",
+    "minimum", "TEXT",
+    "recommended", "TEXT"
+)
+
+r.execute_command(
+    "FT.CREATE", "idx_steamspy_tags",
+    "ON", "HASH",
+    "PREFIX", "1", "tags:{",
+    "SCHEMA",
+    "tags", "TEXT"
+)
+
+r.execute_command(
+    "FT.CREATE", "idx_steam_support",
+    "ON", "HASH",
+    "PREFIX", "1", "support:{",
+    "SCHEMA",
+    "website", "TEXT",
+    "support_url", "TEXT",
+    "support_email", "TEXT"
+)
